@@ -11,6 +11,7 @@ import {
   Products,
   PrivateRoute,
 } from "./pages";
+import ProductsPage from "./pages/ProductsPage";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route exact path="/cart">
           <Cart />
+        </Route>
+        <Route exact path="/products">
+          <ProductsPage />
         </Route>
         <Route exact path='/products/:id' children={<SingleProduct/>}/>
    
