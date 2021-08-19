@@ -15,6 +15,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const SingleProductPage = () => {
+  console.log('we are in single product')
   const { id } = useParams();
   const history = useHistory();
   const {
