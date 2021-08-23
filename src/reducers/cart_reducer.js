@@ -17,10 +17,9 @@ const cart_reducer = (state, action) => {
           if (newAmount > cartItem.max) {
             newAmount = cartItem.max;
           }
-          return {... cartItem, amount:newAmount}
-        }
-        else {
-          return cartItem
+          return { ...cartItem, amount: newAmount };
+        } else {
+          return cartItem;
         }
       });
       return { ...state, cart: tempCart };
@@ -38,7 +37,51 @@ const cart_reducer = (state, action) => {
       return { ...state, cart: [...state.cart, newItem] };
     }
   }
+  if (action.type === REMOVE_CART_ITEM) {
+    const tempCart = state.cart.filter((item) => item.id !== action.payload);
+    return {
+      ...state,
+      cart: tempCart,
+    };
+  }
+  if (action.type === CLEAR_CART) {
+    return { ...state, cart: [] };
+  }
+  if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
+    const { id, value } = action.payload;
+    const tempCart = state.cart.map((item) => {
+      if (item.id === id) {
+        if (value === "inc") {
+          if (item.amount + 1 > item.max) {
+            item.amount = item.max;
+          } else item.amount += 1;
+          return { ...item, amount: item.amount };
+        } else if (value === "dec") {
+          if (item.amount < 1) {
+            item.amount = 0;
+          } else {
+            item.amount = item.amount - 1;
+          }
+          return { ...item, amount: item.amount };
+        }
+      }
 
+      return item;
+    });
+    return { ...state, cart: tempCart };
+  }
+  if (action.type === COUNT_CART_TOTALS) {
+    const { total_items, total_amount } = state.cart.reduce(
+      (total, item) => {
+        const { amount, price } = item;
+        total.total_items += amount;
+        total.total_amount += amount * price;
+        return total;
+      },
+      { total_items: 0, total_amount: 0 }
+    );
+    return { ...state, total_items, total_amount };
+  }
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 
